@@ -5,14 +5,15 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-stamp": "^0.6.0",
+    "socket.io": "^1.7.3",
     "stampit": "^3.1.2",
     "styled-components": "^1.4.4"
   },
   "scripts": {
     "test": "jest",
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "NODE_ENV=production node server.js"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
