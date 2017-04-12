@@ -1,10 +1,13 @@
 import React from 'react'
 import reactStamp from 'react-stamp'
+import styled from 'styled-components'
 import io from 'socket.io-client'
 
 import BoogersTitle from './title'
 import Sidebar from './sidebar'
 import Board from './board'
+import MultiButton from '../components/multibutton'
+import multiplayer from '../mixins/multiplayer'
 import controls from '../mixins/controls'
 import rules from '../mixins/rules'
 import timeTravel from '../mixins/timeTravel'
@@ -16,6 +19,7 @@ const Game = {
   displayName: 'Game',
 
   state: {
+    roomCode: null,
     stepNumber: 0,
     player1Score: 2,
     player2Score: 2,
@@ -53,6 +57,7 @@ const Game = {
 
   render () {
     const {
+      roomCode,
       stepNumber,
       history,
       xIsNext,
@@ -63,9 +68,18 @@ const Game = {
 
     const current = history[stepNumber]
 
+    const CodeSpan = styled.span`
+      display: ${() => roomCode ? 'inline' : 'none' }
+      margin: 5px;
+    `
+
     return (
         <div className='game'>
           <BoogersTitle />
+          <div className='multi'>
+            <MultiButton onClick={() => this.newRoomCode()} />
+            <CodeSpan>Room Code: {roomCode}</CodeSpan>
+          </div>
           <Board
             sqEdge={sqEdge}
             xIsNext={xIsNext}
@@ -103,8 +117,7 @@ const Game = {
             }
 
             .game {
-              font-size: 16px;
-              font-family: Futura, sans-serif;
+              font: 16px Futura, sans-serif;
               background-color: #09530a;
               padding: 5px;
               padding-bottom: 15px;
@@ -116,7 +129,7 @@ const Game = {
                 grid-template-columns: auto auto auto auto;
                 grid-template-rows: auto auto;
                 grid-template-areas:
-                  'header header header .'
+                  'header header header multi'
                   'left main right movelist';
               }
 
@@ -130,9 +143,10 @@ const Game = {
               .game {
                 display: grid;
                 grid-template-columns: auto auto;
-                grid-template-rows: auto auto auto auto;
+                grid-template-rows: auto auto auto auto auto;
                 grid-template-areas:
                   'header header'
+                  'multi multi'
                   'left right'
                   'main main'
                   'movelist movelist';
@@ -148,6 +162,15 @@ const Game = {
               align-items: center;
               color: white;
             }
+
+            .multi {
+              grid-area: multi;
+              display: flex,
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+              color: white;
+            }
           `}</style>
         </div> 
     )
@@ -159,5 +182,6 @@ export default reactStamp(React).compose(
   controls,
   rules,
   timeTravel,
-  vectorActions
+  vectorActions,
+  multiplayer
 )

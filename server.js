@@ -7,6 +7,8 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 var server
 
+var activeGames = []
+
 app.prepare().then(() => {
   server = createServer((req, res) => {
     const parsedUrl = parse(req.url, true)
