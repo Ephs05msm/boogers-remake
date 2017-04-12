@@ -1,5 +1,6 @@
 import React from 'react'
 import reactStamp from 'react-stamp'
+import io from 'socket.io-client'
 
 import BoogersTitle from './title'
 import Sidebar from './sidebar'
@@ -34,6 +35,20 @@ const Game = {
     possibleMoves: [],
     neighboringOpponents: [],
     winner: null
+  },
+
+  componentDidMount () {
+    const socket = io()
+  },
+
+  componentDidUpdate (prevProps, prevState) {
+    const { xIsNext: prevTurn } = prevState
+    const { xIsNext } = this.state
+    
+    if (prevTurn !== xIsNext) {
+      const socket = io()
+      socket.emit('player move', xIsNext)
+    }
   },
 
   render () {

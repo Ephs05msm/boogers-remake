@@ -18,9 +18,8 @@ app.prepare().then(() => {
   const io = require('socket.io')(server)
 
   io.on('connection', (socket) => {
-    console.log('a user connected')
-    socket.on('disconnect', () => {
-      console.log('user disconnected')
+    socket.on('player move', (turn) => {
+      console.log((turn ? 'X\'s' : 'O\'s') + ' turn')
     })
   })
 
