@@ -6,11 +6,12 @@ import io from 'socket.io-client'
 import BoogersTitle from './title'
 import Sidebar from './sidebar'
 import Board from './board'
-import MultiButton from '../components/multibutton'
+import MultiButton from './multibutton'
+import MoveList from './movelist'
+import timeTravel from '../mixins/timeTravel'
 import multiplayer from '../mixins/multiplayer'
 import controls from '../mixins/controls'
 import rules from '../mixins/rules'
-import timeTravel from '../mixins/timeTravel'
 import vectorActions from '../mixins/vectorActions'
 
 const sqEdge = 9
@@ -104,10 +105,9 @@ const Game = {
             xIsNext={xIsNext}
             winner={winner} 
           />
-          <div className='game-info'>
-            <div className='turn-status'>Move List</div>
-            <ol>{this.listMoves()}</ol>
-          </div>
+          <MoveList
+            roomCode={roomCode}
+            listMoves={() => this.listMoves()} />
           <style jsx>{`
             ol, ul {
               list-style-type: none;
@@ -132,11 +132,6 @@ const Game = {
                   'header header header multi'
                   'left main right movelist';
               }
-
-              .game-info {
-                height: 400px;
-                overflow: auto;
-              }
             }
 
             @media (max-width: 767px) {
@@ -152,15 +147,6 @@ const Game = {
                   'movelist movelist';
                 justify-items: center;
               }
-            }
-
-            .game-info {
-              grid-area: movelist;
-              display: flex;
-              flex-direction: column;
-              justify-content: start;
-              align-items: center;
-              color: white;
             }
 
             .multi {
