@@ -20,6 +20,7 @@ const Game = {
   displayName: 'Game',
 
   state: {
+    socket: null,
     roomCode: null,
     stepNumber: 0,
     player1Score: 2,
@@ -44,18 +45,20 @@ const Game = {
 
   componentDidMount () {
     const socket = io()
+
+    this.setState({
+      socket: socket
+    })
   },
 
   componentDidUpdate (prevProps, prevState) {
     const { xIsNext: prevTurn } = prevState
-    const { xIsNext, roomCode, history, stepNumber } = this.state
+    const { xIsNext, roomCode, history, stepNumber, socket } = this.state
     
     if (prevTurn !== xIsNext) {
-      const socket = io()
       socket.emit('player move', xIsNext)
     }
     if (roomCode) {
-      const socket = io()
       socket.emit('game created', roomCode, history[stepNumber].squares)
     }
   },
