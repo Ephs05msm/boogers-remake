@@ -23,6 +23,10 @@ app.prepare().then(() => {
     socket.on('player move', (turn) => {
       console.log((turn ? 'X\'s' : 'O\'s') + ' turn')
     })
+    socket.on('game created', (code, squares) => {
+      activeGames[code] = squares
+      console.log(activeGames[code])
+    })
   })
 
   server.listen(3000, (err) => {

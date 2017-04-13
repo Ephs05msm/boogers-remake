@@ -48,11 +48,15 @@ const Game = {
 
   componentDidUpdate (prevProps, prevState) {
     const { xIsNext: prevTurn } = prevState
-    const { xIsNext } = this.state
+    const { xIsNext, roomCode, history, stepNumber } = this.state
     
     if (prevTurn !== xIsNext) {
       const socket = io()
       socket.emit('player move', xIsNext)
+    }
+    if (roomCode) {
+      const socket = io()
+      socket.emit('game created', roomCode, history[stepNumber].squares)
     }
   },
 
