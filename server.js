@@ -7,7 +7,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 var server
 
-var activeGames = []
+var gameSquares = Object.create(null)
 
 app.prepare().then(() => {
   server = createServer((req, res) => {
@@ -26,15 +26,26 @@ app.prepare().then(() => {
       console.log((turn ? 'X\'s' : 'O\'s') + ' turn')
       console.log(socket.id)
     })
+
     socket.on('game created', (code, squares) => {
-      activeGames[code] = {
-        players: [socket.id],
-        squares: squares
-      }
-      console.log(activeGames[code])
+      socket.join(code, (err) => {
+        gameSquares[code] = squares
+      })
+      console.log(gameSquares)
     })
-    socket.on('disconnect', () => {
-      console.log('player disconnected')
+
+    socket.on('disconnecting', () => { // fires before rooms are left
+      const affectedGames = Object.keys(socket.rooms)
+      .filter((item) => item != socket.id)
+
+      affectedGames.forEach((game) => {
+        io.of('/').in(game).clients((err, clients) => {
+          // if room has another player (besides currently disconnecting one)
+          if (clients.length < 2) {
+            delete gameSquares[game]
+          }
+        })
+      })
     })
   })
 
