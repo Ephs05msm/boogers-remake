@@ -13,6 +13,13 @@ const MoveList = {
           <div className='turn-status'>Move List</div>
           <ol>{listMoves()}</ol>
           <style jsx>{`
+            ol, ul {
+              list-style-type: none;
+              margin: 5px;
+              padding: 0px;
+              color: white;
+            }
+            
             .game-info {
               grid-area: movelist;
               display: flex;

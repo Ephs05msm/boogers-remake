@@ -12,5 +12,18 @@ export default {
     this.setState({
       roomCode: roomCode
     })
+  },
+
+  handleFormChange (e) {
+    this.setState({
+      joinField: e.target.value
+    })
+  },
+
+  handleFormClick () {
+    const { joinField } = this.state
+    this.setState({
+      roomCode: joinField
+    })
   }
 }

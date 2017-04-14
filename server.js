@@ -29,9 +29,12 @@ app.prepare().then(() => {
 
     socket.on('game created', (code, squares) => {
       socket.join(code, (err) => {
-        gameSquares[code] = squares
+        if (!gameSquares[code]) {
+          gameSquares[code] = squares
+        }
       })
       console.log(gameSquares)
+      io.of('/').in(code).clients((err, clients) => console.log(clients.length))
     })
 
     socket.on('disconnecting', () => { // fires before rooms are left

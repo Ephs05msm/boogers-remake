@@ -6,7 +6,7 @@ import io from 'socket.io-client'
 import BoogersTitle from './title'
 import Sidebar from './sidebar'
 import Board from './board'
-import MultiButton from './multibutton'
+import MultiMenu from './multiMenu'
 import MoveList from './movelist'
 import timeTravel from '../mixins/timeTravel'
 import multiplayer from '../mixins/multiplayer'
@@ -22,6 +22,7 @@ const Game = {
   state: {
     socket: null,
     roomCode: null,
+    joinField: 'Game Code',
     stepNumber: 0,
     player1Score: 2,
     player2Score: 2,
@@ -66,6 +67,7 @@ const Game = {
   render () {
     const {
       roomCode,
+      joinField,
       stepNumber,
       history,
       xIsNext,
@@ -76,18 +78,16 @@ const Game = {
 
     const current = history[stepNumber]
 
-    const CodeSpan = styled.span`
-      display: ${() => roomCode ? 'inline' : 'none' }
-      margin: 5px;
-    `
-
     return (
         <div className='game'>
           <BoogersTitle />
-          <div className='multi'>
-            <MultiButton onClick={() => this.newRoomCode()} />
-            <CodeSpan>Room Code: {roomCode}</CodeSpan>
-          </div>
+          <MultiMenu
+            roomCode={roomCode}
+            joinField={joinField}
+            onClick={() => this.newRoomCode()}
+            onFormClick={() => this.handleFormClick()}
+            onChange={(e) => this.handleFormChange(e)}
+          />
           <Board
             sqEdge={sqEdge}
             xIsNext={xIsNext}
@@ -116,13 +116,6 @@ const Game = {
             roomCode={roomCode}
             listMoves={() => this.listMoves()} />
           <style jsx>{`
-            ol, ul {
-              list-style-type: none;
-              margin: 5px;
-              padding: 0px;
-              color: white;
-            }
-
             .game {
               font: 16px Futura, sans-serif;
               background-color: #09530a;
@@ -154,15 +147,6 @@ const Game = {
                   'movelist movelist';
                 justify-items: center;
               }
-            }
-
-            .multi {
-              grid-area: multi;
-              display: flex,
-              flex-direction: row;
-              justify-content: center;
-              align-items: center;
-              color: white;
             }
           `}</style>
         </div> 
