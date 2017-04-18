@@ -8,11 +8,11 @@ const HostMulti = {
   displayName: 'MultiButton',
 
   render () {
-    const { roomCode } = this.props
+    const { roomCode, onClick } = this.props
 
     if (!roomCode) {
         return (
-        <MultiButton>
+        <MultiButton onClick={() => onClick()}>
           Host Game
         </MultiButton>
       )
