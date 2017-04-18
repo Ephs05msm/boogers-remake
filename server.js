@@ -43,6 +43,7 @@ app.prepare().then(() => {
         } else if (clients.length === 1) { // game has one player
           socket.join(code, (err) => { // join game
             socket.emit('join success', 1) // send back playerId of 1 (guest moves first)
+            io.in(code).emit('ready')
           })
         } else { // do nothing
           return null
@@ -59,6 +60,8 @@ app.prepare().then(() => {
           // if room has another player (besides currently disconnecting one)
           if (clients.length < 2) {
             delete gameSquares[game]
+          } else if (clients.length === 2) {
+            io.in(game).emit('unready')
           }
         })
       })

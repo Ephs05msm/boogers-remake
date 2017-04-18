@@ -24,6 +24,7 @@ const Game = {
     roomCode: null,
     joinField: 'Game Code',
     playerId: null,
+    opponentConnected: false,
     stepNumber: 0,
     player1Score: 2,
     player2Score: 2,
@@ -47,6 +48,18 @@ const Game = {
 
   componentDidMount () {
     const socket = io()
+
+    socket.on('ready', () => {
+      this.setState({
+        opponentConnected: true
+      })
+    })
+
+    socket.on('unready', () => {
+      this.setState({
+        opponentConnected: false
+      })
+    })
 
     socket.on('update board', (squares, turn) => {
       this.handleMultiMove(squares, turn)
@@ -72,6 +85,7 @@ const Game = {
       roomCode,
       joinField,
       playerId,
+      opponentConnected,
       stepNumber,
       history,
       xIsNext,
@@ -109,6 +123,8 @@ const Game = {
             xIsNext={xIsNext}
             winner={winner}
             playerId={playerId}
+            opponentConnected={opponentConnected}
+            roomCode={roomCode}
           />
           <Sidebar
             player='2'
@@ -117,6 +133,8 @@ const Game = {
             xIsNext={xIsNext}
             winner={winner}
             playerId={playerId}
+            opponentConnected={opponentConnected}
+            roomCode={roomCode}
           />
           <MoveList
             roomCode={roomCode}

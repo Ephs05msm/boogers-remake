@@ -5,6 +5,32 @@ import styled from 'styled-components'
 const Sidebar = {
   displayName: 'Sidebar',
 
+  multiStatus () {
+    const { player, playerId, opponentConnected, roomCode } = this.props
+
+    var MultiStatus = styled.div`
+      color: white;
+      font-size: 14px;
+      padding: 2px;
+    `
+
+    if (roomCode && player === playerId.toString()) {
+      return (
+        <MultiStatus>
+          You are connected!
+        </MultiStatus>
+      )
+    } else if (roomCode && opponentConnected) {
+      return (
+        <MultiStatus>
+          Opponent is connected!
+        </MultiStatus>
+      )
+    } else {
+      return null
+    }
+  },
+
   turnChat () {
     const { player, xIsNext, winner } = this.props
     const p1Bright = '#f2e13f', p1Dark = '#c8b357'
@@ -67,6 +93,7 @@ const Sidebar = {
     
     return (
       <div className={side + ' sidebar'}>
+        {this.multiStatus()}
         <div className={playerTag + ' scores'}>
           <div>{playerStrg}</div>
           <div className='bigNum'>{score}</div>
