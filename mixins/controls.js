@@ -4,9 +4,12 @@ const sqEdge = 9
 
 export default {
   handleClick (i) {
-    const { selected } = this.state
+    const { selected, playerId, xIsNext } = this.state
+    const currentTurn = xIsNext ? 1 : 2
 
-    if (selected || selected === 0) {
+    if (currentTurn !== playerId) {
+      return
+    } else if (selected || selected === 0) {
       this.handleSelected(i)
     } else {
       this.handleSelect(i)
