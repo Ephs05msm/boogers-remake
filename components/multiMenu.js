@@ -9,7 +9,12 @@ const MultiMenu = {
   displayName: 'MultiMenu',
 
   render () {
-    const { roomCode, joinField, onClick, onFormClick, onChange } = this.props
+    const {
+      roomCode,
+      joinField,
+      onClick,
+      onFormClick,
+      onChange } = this.props
 
     if (!roomCode) {
       return (

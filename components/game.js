@@ -23,6 +23,7 @@ const Game = {
     socket: null,
     roomCode: null,
     joinField: 'Game Code',
+    playerId: null,
     stepNumber: 0,
     player1Score: 2,
     player2Score: 2,
@@ -54,13 +55,10 @@ const Game = {
 
   componentDidUpdate (prevProps, prevState) {
     const { xIsNext: prevTurn } = prevState
-    const { xIsNext, roomCode, history, stepNumber, socket } = this.state
+    const { xIsNext } = this.state
     
     if (prevTurn !== xIsNext) {
       socket.emit('player move', xIsNext)
-    }
-    if (roomCode) {
-      socket.emit('game created', roomCode, history[stepNumber].squares)
     }
   },
 
@@ -68,6 +66,7 @@ const Game = {
     const {
       roomCode,
       joinField,
+      playerId,
       stepNumber,
       history,
       xIsNext,
@@ -103,14 +102,16 @@ const Game = {
             score={player1Score}
             side='left'
             xIsNext={xIsNext}
-            winner={winner} 
+            winner={winner}
+            playerId={playerId}
           />
           <Sidebar
             player='2'
             score={player2Score}
             side='right'
             xIsNext={xIsNext}
-            winner={winner} 
+            winner={winner}
+            playerId={playerId}
           />
           <MoveList
             roomCode={roomCode}

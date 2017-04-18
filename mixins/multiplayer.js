@@ -8,9 +8,14 @@ export default {
       alpha: true,
       casing: 'upper'
     })
+    const { history, stepNumber, socket } = this.state
     
-    this.setState({
-      roomCode: roomCode
+    socket.emit('game created', roomCode, history[stepNumber].squares)
+    socket.on('create success', (id) => {
+      this.setState({
+        roomCode: roomCode,
+        playerId: id
+      })
     })
   },
 
@@ -25,9 +30,10 @@ export default {
 
     socket.emit('join request', joinField)
     
-    socket.on('join success', () => {
+    socket.on('join success', (id) => {
       this.setState({
-        roomCode: joinField
+        roomCode: joinField,
+        playerId: id
       })
     })
 

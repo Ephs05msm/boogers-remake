@@ -28,9 +28,10 @@ app.prepare().then(() => {
     })
 
     socket.on('game created', (code, squares) => {
-      socket.join(code, (err) => {
-        if (!gameSquares[code]) {
-          gameSquares[code] = squares
+      socket.join(code, (err) => { // join room named after code
+        if (!gameSquares[code]) { // game doesn't exist yet
+          gameSquares[code] = squares // create game key and save squares
+          socket.emit('create success', 2) // send back playerId of 2 (host moves last)
         }
       })
       console.log(gameSquares)
@@ -44,7 +45,7 @@ app.prepare().then(() => {
         } else if (clients.length === 0) { // game has no players
           socket.emit('no game')
         } else if (clients.length === 1) { // game has one player
-          socket.emit('join success')
+          socket.emit('join success', 1) // send back playerId of 1 (guest moves first)
         } else { // do nothing
           return null
         }
