@@ -22,7 +22,8 @@ const Game = {
   state: {
     socket: null,
     roomCode: null,
-    joinField: 'Game Code',
+    joinField: '',
+    multiError: null,
     playerId: null,
     opponentConnected: false,
     stepNumber: 0,
@@ -82,8 +83,10 @@ const Game = {
 
   render () {
     const {
+      socket,
       roomCode,
       joinField,
+      multiError,
       playerId,
       opponentConnected,
       stepNumber,
@@ -100,10 +103,11 @@ const Game = {
         <div className='game'>
           <BoogersTitle />
           <MultiMenu
+            multiError={multiError}
             roomCode={roomCode}
             joinField={joinField}
             onClick={() => this.newRoomCode()}
-            onFormClick={() => this.handleFormClick()}
+            onFormClick={(e) => this.handleFormClick(e)}
             onChange={(e) => this.handleFormChange(e)}
           />
           <Board
@@ -151,10 +155,11 @@ const Game = {
               .game {
                 display: grid;
                 grid-template-columns: auto auto auto auto;
-                grid-template-rows: auto auto;
+                grid-template-rows: auto auto auto;
                 grid-template-areas:
-                  'header header header multi'
-                  'left main right movelist';
+                  'header header header .'
+                  'left main right movelist'
+                  'multi multi multi .';
               }
             }
 

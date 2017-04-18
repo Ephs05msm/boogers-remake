@@ -20,12 +20,13 @@ export default {
   },
 
   handleFormChange (e) {
-    this.setState({
-      joinField: e.target.value
+    this.setState({ // convert to uppercase and limit to 4 chars
+      joinField: e.target.value.toUpperCase().slice(0, 4),
+      multiError: null
     })
   },
 
-  handleFormClick () {
+  handleFormClick (e) {
     const { joinField, socket } = this.state
 
     socket.emit('join request', joinField)
@@ -38,11 +39,19 @@ export default {
     })
 
     socket.on('game full', () => {
-      console.log('Game ' + joinField + ' already has two players.')
+      this.setState({
+        joinField: '',
+        multiError: 'Game ' + joinField + ' already has two players.'
+      })
     })
 
     socket.on('no game', () => {
-      console.log('Game ' + joinField + ' does not exist.')
+      this.setState({
+        joinField: '',
+        multiError: 'Game ' + joinField + ' does not exist.'
+      })
     })
+
+    e.preventDefault()
   }
 }

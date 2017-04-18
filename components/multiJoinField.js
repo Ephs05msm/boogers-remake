@@ -12,10 +12,22 @@ const MultiJoin = {
 
     if (!roomCode) {
       return (
-        <div>
-          <input type='text' value={joinField} onChange={(e) => onChange(e)}/>
-          <MultiButton onClick={() => onFormClick()}>Join Game</MultiButton>
-        </div>
+        <form onSubmit={(e) => onFormClick(e)}>
+          <input type='text' value={joinField} placeholder='Enter code' onChange={(e) => onChange(e)}/>
+          <MultiButton type='submit'>Join Game</MultiButton>
+          <style jsx>{`
+            input {
+              background: #d9d9d3;
+              border-radius: 3px;
+              width: 80px;
+              padding: 5px;
+              margin: 2px;
+              font-weight: bold;
+              text-align: center;
+              border: 2px solid #7d87af;
+            }
+          `}</style>
+        </form>
       )
     } else {
       return null
