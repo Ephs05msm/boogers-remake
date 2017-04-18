@@ -165,6 +165,26 @@ export default {
     })
   },
 
+  handleMultiMove (squares, turn) {
+    const { stepNumber, xIsNext } = this.state
+    const history = this.state.history.slice(0, stepNumber + 1)
+    const winner = this.calculateWinner(squares)
+
+    this.setState({
+      history: history.concat([{
+        squares: squares
+      }]),
+      xIsNext: turn,
+      stepNumber: history.length,
+      selected: null,
+      player1Score: this.calculateScores(squares, 'X'),
+      player2Score: this.calculateScores(squares, 'O'),
+      possibleMoves: [],
+      neighboringOpponents: [],
+      winner: winner
+    })
+  },
+
   getVec (i) {
     const y = Math.floor(i / sqEdge)
     const x = i % sqEdge

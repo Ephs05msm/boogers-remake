@@ -20,11 +20,9 @@ app.prepare().then(() => {
   const io = require('socket.io')(server)
 
   io.on('connection', (socket) => {
-    console.log('player connected')
-    
-    socket.on('player move', (turn) => {
-      console.log((turn ? 'X\'s' : 'O\'s') + ' turn')
-      console.log(socket.id)
+    socket.on('player move', (game, turn, squares) => {
+      gameSquares[game] = squares
+      socket.to(game).emit('update board', squares, turn)
     })
 
     socket.on('game created', (code, squares) => {
@@ -34,8 +32,6 @@ app.prepare().then(() => {
           socket.emit('create success', 2) // send back playerId of 2 (host moves last)
         }
       })
-      console.log(gameSquares)
-      io.of('/').in(code).clients((err, clients) => console.log(clients.length))
     })
 
     socket.on('join request', (code) => {
@@ -45,7 +41,9 @@ app.prepare().then(() => {
         } else if (clients.length === 0) { // game has no players
           socket.emit('no game')
         } else if (clients.length === 1) { // game has one player
-          socket.emit('join success', 1) // send back playerId of 1 (guest moves first)
+          socket.join(code, (err) => { // join game
+            socket.emit('join success', 1) // send back playerId of 1 (guest moves first)
+          })
         } else { // do nothing
           return null
         }

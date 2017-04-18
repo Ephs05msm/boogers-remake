@@ -48,17 +48,22 @@ const Game = {
   componentDidMount () {
     const socket = io()
 
+    socket.on('update board', (squares, turn) => {
+      this.handleMultiMove(squares, turn)
+    })
+
     this.setState({
       socket: socket
     })
   },
 
   componentDidUpdate (prevProps, prevState) {
-    const { xIsNext: prevTurn } = prevState
-    const { xIsNext } = this.state
-    
-    if (prevTurn !== xIsNext) {
-      socket.emit('player move', xIsNext)
+    const { xIsNext: prevTurn, stepNumber: prevStep } = prevState
+    const { socket, playerId, xIsNext, roomCode, stepNumber, history } = this.state
+    const prevPlayer = prevTurn ? 1 : 2
+
+    if (prevPlayer === playerId && prevStep !== stepNumber) {
+      socket.emit('player move', roomCode, xIsNext, history[stepNumber].squares)
     }
   },
 
