@@ -21,9 +21,22 @@ export default {
   },
 
   handleFormClick () {
-    const { joinField } = this.state
-    this.setState({
-      roomCode: joinField
+    const { joinField, socket } = this.state
+
+    socket.emit('join request', joinField)
+    
+    socket.on('join success', () => {
+      this.setState({
+        roomCode: joinField
+      })
+    })
+
+    socket.on('game full', () => {
+      console.log('Game ' + joinField + ' already has two players.')
+    })
+
+    socket.on('no game', () => {
+      console.log('Game ' + joinField + ' does not exist.')
     })
   }
 }

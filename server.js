@@ -37,6 +37,20 @@ app.prepare().then(() => {
       io.of('/').in(code).clients((err, clients) => console.log(clients.length))
     })
 
+    socket.on('join request', (code) => {
+      io.of('/').in(code).clients((err, clients) => {
+        if (clients.length === 2) { // game has two players
+          socket.emit('game full')
+        } else if (clients.length === 0) { // game has no players
+          socket.emit('no game')
+        } else if (clients.length === 1) { // game has one player
+          socket.emit('join success')
+        } else { // do nothing
+          return null
+        }
+      })
+    })
+
     socket.on('disconnecting', () => { // fires before rooms are left
       const affectedGames = Object.keys(socket.rooms)
       .filter((item) => item != socket.id)
